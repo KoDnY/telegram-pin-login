@@ -1,0 +1,40 @@
+# Local secrets (keep distributable configuration examples)
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Python environments and generated files
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node.js dependencies and build output
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Local logs and editor settings
+*.log
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Downloaded utilities and temporary verification files
+/tools/
+/.tmp/
+*.zip
+
+# Local AI tooling, generated graphs and IDE state
+/.agents/
+/.codex/
+/.specify/
+/graphify-out/
