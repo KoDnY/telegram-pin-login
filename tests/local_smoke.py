@@ -1,6 +1,8 @@
 """Real local HTTP smoke test; no Telegram account, tunnel or credentials needed.
 
-Run after npm --prefix api run build: bot/.venv/Scripts/python.exe tests/local_smoke.py
+Cross-project check from workspace root:
+ npm.cmd --prefix server/api run build
+ server/.venv/Scripts/python.exe tests/local_smoke.py
 """
 import asyncio
 import os
@@ -11,7 +13,9 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+SERVER = ROOT / "server"
 sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(SERVER))
 
 import httpx
 from aiohttp import web
@@ -60,13 +64,13 @@ async def main():
     api_port, bot_port = free_port(), free_port()
     api_url = f"http://127.0.0.1:{api_port}"
     secret, webhook = "smoke-internal-only", "smoke-webhook-only"
-    env = {**os.environ, "PORT": str(api_port), "INTERNAL_API_KEY": secret,
+    env = {**os.environ, "API_PORT": str(api_port), "PORT": str(api_port), "INTERNAL_API_KEY": secret,
            "BOT_INTERNAL_URL": f"http://127.0.0.1:{bot_port}"}
     processes = []
     logs = []
 
     async def start_api():
-        process = subprocess.Popen(["node", "api/dist/server.js"], cwd=ROOT,
+        process = subprocess.Popen(["node", "api/dist/server.js"], cwd=SERVER,
                                    env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         processes.append(process)
         async with httpx.AsyncClient() as raw:

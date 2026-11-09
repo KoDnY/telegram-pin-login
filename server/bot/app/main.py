@@ -37,8 +37,8 @@ class Config:
 
     @classmethod
     def from_env(cls) -> "Config":
-        # Explicit file path works both from the project root and bot directory.
-        values = {**dotenv_values(Path(__file__).resolve().parents[1] / ".env"), **os.environ}
+        # This standalone server project has one shared configuration file.
+        values = {**dotenv_values(Path(__file__).resolve().parents[2] / ".env"), **os.environ}
         def required(name: str) -> str:
             value = str(values.get(name) or "").strip()
             if not value:
@@ -52,9 +52,9 @@ class Config:
         key = required("INTERNAL_API_KEY")
         if not re.fullmatch(r"[A-Za-z0-9_-]{1,256}", secret) or secret == key:
             raise ValueError("WEBHOOK_SECRET must be a separate valid Telegram secret")
-        port = int(values.get("PORT") or 8080)
+        port = int(values.get("BOT_PORT") or values.get("PORT") or 8080)
         if not 1 <= port <= 65535:
-            raise ValueError("PORT must be between 1 and 65535")
+            raise ValueError("BOT_PORT must be between 1 and 65535")
         api = str(values.get("API_BASE_URL") or "http://127.0.0.1:3000").rstrip("/")
         parsed_api = urlsplit(api)
         if parsed_api.scheme not in ("http", "https") or not parsed_api.netloc or parsed_api.username or parsed_api.query or parsed_api.fragment:

@@ -38,3 +38,8 @@ Thumbs.db
 /.codex/
 /.specify/
 /graphify-out/
+
+# Independent project local utilities and logs
+/server/tools/
+/server/.tmp/
+/client/.tmp/
